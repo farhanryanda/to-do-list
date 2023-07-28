@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Raleway&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+  <div class="container text-center main" style="width: 80%;">
+        <h1>#todo</h1>
+        <div class="text-center control mt-3">
+          <!-- Navigation -->
+          <ul class="nav justify-content-around">
+            <li class="nav-item">
+              <a class="nav-link nav-text" aria-current="page" id="all" href="/">All</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link nav-text" id="active" href="/active">Active</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link nav-text border-bottom border-2 border-primary" id="completed" href="/completed">Completed</a>
+            </li>
+          </ul>
+        </div>
+        <div class="text-center mt-4" >
+          <form method="post" action="/completed">
+            <div class="row">
+              <div class="col-10 px-0 mb">
+                  <div class="col-auto">
+                    <input type="text" class="form-control" id="task" name="task" placeholder="add details" required>
+                  </div>
+              </div>
+              <div class="col-2 d-grid gap-2 px-0 ps-3">
+                <button type="submit" class="btn btn-primary mb-3">Add</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="text-center todo">
+          <!-- looping to get all the todos data in the database -->
+          <% todos.forEach((todo) => { %>
+            <!-- condition to show only todos with completed status only -->
+            <% if (todo.status === 'checked') { %>
+             <div class="row mt-3">
+                <div class="col-sm-1 px-0 text-start">
+                  <form action="/editcompleted" method="post">
+                    <div class="item">
+                      <input class="form-check-input" type="checkbox" <% if (todo.status === 'checked') { %> checked <% } %> onChange="this.form.submit()">
+                    </div>
+                    <input type="hidden" name="idcheck" value="<%= todo._id %>">
+                    <input type="hidden" name="status" value="<%= todo.status %>">
+                  </form>
+                </div>
+                <div class="col-sm-10 px-0 text-start "><div class="col-sm-10 px-0 text-start overflow-auto">
+                    <s><%= todo.task %></s>
+                </div></div>
+                <div class="col-sm-1 px-0" >
+                  <!-- form to delete todo with the button trash trigger -->
+                  <form action="/deletecompleted" method="post" class="d-inline">
+                      <input type="hidden" name="_id" value="<%= todo._id %>">
+                      <button type="submit" class="btn btn-danger badge">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-trash3" viewBox="0 0 16 16">
+                      <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+                      </svg>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            <% } %>
+          <% }) %>
+          
+        </div>
+        <div class="text-end mt-3">
+          <!-- form to delete all todos in the database -->
+          <form action="/delete-all" method="post">
+            <button type="submit" class="btn btn-danger delete-all">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"></path>
+              </svg>
+              delete-all
+            </button>
+          </form>
+        </div>
+        
+  </div>
+  <script>
+    // Capture the key press event on the input field
+    document.getElementById("task").addEventListener("keyup", function(event) {
+      // Check if the key pressed is "Enter" (key code 13)
+      if (event.keyCode === 13) {
+        // Submit the form
+        this.form.submit();
+      }
+    });
+  </script>
+    
+</body>
+</html>
